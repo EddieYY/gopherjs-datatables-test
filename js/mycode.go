@@ -1,21 +1,21 @@
 package main
 
 import (
+	"encoding/json"
+	"github.com/dennisfrancis/websocket"
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jquery"
 	"time"
-	"encoding/json"
-	"github.com/dennisfrancis/websocket"
 )
 
 var jQuery = jquery.NewJQuery
-var document js.Object
-var tableobj js.Object
+var document *js.Object
+var tableobj *js.Object
 
 func main() {
 
 	jQuery("document").Ready(startup)
-	document =  js.Global.Get("window").Get("document")
+	document = js.Global.Get("window").Get("document")
 }
 
 func startup() {
@@ -26,13 +26,13 @@ func startup() {
 Notable features of datatable : sort, save-state, defer-render, search, extensions
 */
 func create_table() {
-	ws  :=  websocket.New("ws://localhost:1234/tabledata")
-	
-	var tableobj js.Object
+	ws := websocket.New("ws://localhost:1234/tabledata")
+
+	var tableobj *js.Object
 
 	first := true
 
-	ws_onopen := func(obj js.Object) {
+	ws_onopen := func(obj *js.Object) {
 		println("WS opened")
 	}
 
@@ -62,9 +62,9 @@ func create_table() {
 			/* Below works correctly */
 			tableobj.Call("clear")
 			tableobj.Get("rows").Call("add", dataobj["data"]).Call("draw")
-			
+
 		}
-		
+
 		t2 := time.Now()
 		println("rendering time = ", t2.Sub(t1).Seconds()/1000.0, "ms")
 
